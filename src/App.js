@@ -5,7 +5,9 @@ import AllRoutes from'./components/AllRoutes'
 function App() {
   return (
  <>
+
  <AllRoutes/>
+ 
  </>
   );
 }
