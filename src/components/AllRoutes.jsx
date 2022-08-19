@@ -6,11 +6,13 @@ import {BrowserRouter as Router , Routes , Route } from 'react-router-dom';
 import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import User from './Pages/User';
+import Fetchedproducts from './FetchedData/Fetchedproducts';
 const AllRoutes = () => {
   const [user , setUserOnLogin] = useState(JSON.parse(localStorage.getItem("LogginUser")))
   return (
     <div>
         <Router>
+          <Fetchedproducts></Fetchedproducts>
                <Navbar user={user}/>
             <Routes>
                 <Route  path='/' element={<Home/>}></Route>
