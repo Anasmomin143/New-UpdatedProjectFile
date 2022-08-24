@@ -2,16 +2,18 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react';
 import { useSelector } from 'react-redux/es/exports'
+import { useDispatch } from 'react-redux/es/hooks/useDispatch'
+
 const Products = () => {
 
     const [Price, setPrice] = useState(0)
     const [filteredproducts, setFilteredproducts] = useState([])
+    const dispatch = useDispatch()
 
     const { ProductsinStore } = useSelector((State) => {
         return { ProductsinStore: State.ProductsinStore }
     })
-    console.log("store meka", ProductsinStore)
-
+    // console.log("store meka", ProductsinStore)
     useEffect(() => {
         const filteredpro = ProductsinStore.filter((item) => {
             if (item.price < Price) return false;
@@ -20,8 +22,16 @@ const Products = () => {
         setFilteredproducts(filteredpro)
     }, [Price, ProductsinStore])
 
+    const ADDTO_CART = (ProductItem) => {
+        // console.log("Products in add to cart function",ProductItem)
+        dispatch({
+            type: 'AddToCart',
+            payload: { ProductItem }
+        })
+    }
 
-    console.log(Price)
+
+    // console.log(Price)
     return (
         <div className='bg'>
             <div className="container col-5 justify-content-around m-t-40">
@@ -34,26 +44,21 @@ const Products = () => {
                     <div className="col-11 mx-auto">
                         <div className="row m-3 mt-5">
                             {
-                                filteredproducts.map((Pro) => {
-                                    const { id, category, image, price, title, rating } = Pro
+                                filteredproducts.map((ProductItem) => {
+                                    const { id, category, image, price, title, rating } = ProductItem
                                     const { rate } = rating
 
                                     return (
-                                        <>
-
-                                            <div className="card justify-content-space-evenly" style={{ width: "18rem" }} key={id}>
-                                                <img className="card-img-top" src={image} style={{
-                                                    height: "250px"
-                                                }} alt="Card image cap" />
-                                                <div className="card-body">
-                                                    <h5 className="card-title">{title}</h5>
-                                                    <p className="card-text"><strong>{category}</strong></p>
-                                                    <h6 className="card-text">{rate}</h6>
-                                                    <h5 className="card-text align-self-end">Price : {price}</h5>
-                                                    <a href="#" className="btn btn-danger">Add To cart</a>
-                                                </div>
+                                        <div className="card justify-content-space-evenly" style={{ width: "18rem" }} key={id}  >
+                                            <img className="card-top" src={image} style={{ height: "250px" }} alt="" />
+                                            <div className="card-body">
+                                                <h5 className="card-title">{title}</h5>
+                                                <p className="card-text"><strong>{category}</strong></p>
+                                                <h6 className="card-text">{rate}</h6>
+                                                <h5 className="card-text align-self-end">Price : {price}</h5>
+                                                <button className="btn btn-danger" onClick={() => ADDTO_CART(ProductItem)}>Add To cart</button>
                                             </div>
-                                        </>
+                                        </div>
                                     )
                                 })
                             }

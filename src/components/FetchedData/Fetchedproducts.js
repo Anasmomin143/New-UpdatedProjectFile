@@ -9,24 +9,24 @@ const Fetchedproducts = () => {
 
     const FETCH_DATA_FROM_API = () => {
         axios.get('https://fakestoreapi.com/products').then((res) => {
-            console.log("Response",res.data)
+            // console.log("Response",res.data)
             const produts = res.data
-            console.log("uderwala",produts)
             setProductsFromApi(produts)
         })
     }
 
     useEffect(() => {
         FETCH_DATA_FROM_API()
-    },[]);
+    }, []);
 
 
     useEffect(() => {
+        console.log("Dispath UseEffect")
         dispatch({
             type: 'FetchedData',
             payload: { productsFromApi }
         })
-    }, [productsFromApi])
+    },)
 }
 
 export default Fetchedproducts
