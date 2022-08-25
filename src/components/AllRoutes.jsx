@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import User from './Pages/User';
-import Fetchedproducts from './FetchedData/Fetchedproducts';
+// import Fetchedproducts from './FetchedData/Fetchedproducts';
 import Cart from './Form/Cart';
 const AllRoutes = () => {
   const [user, setUserOnLogin] = useState(JSON.parse(localStorage.getItem("LogginUser")))
@@ -15,7 +15,7 @@ const AllRoutes = () => {
       <Router>
 
         <Navbar user={user} />
-        <Fetchedproducts></Fetchedproducts>
+        {/* <Fetchedproducts></Fetchedproducts> */}
         <Routes>
           <Route path='/Cart' element={<Cart />}></Route>
           <Route path='/' element={<Home />}></Route>

@@ -26,7 +26,7 @@ const Fetchedproducts = () => {
             type: 'FetchedData',
             payload: { productsFromApi }
         })
-    },)
+    })
 }
 
 export default Fetchedproducts

@@ -1,12 +1,9 @@
 import React from 'react'
-import { useSelector } from 'react-redux/es/exports'
 import { Link } from 'react-router-dom'
 
 const Navbar = (props) => {
- const ProductInNav= useSelector((State)=>{
-   return State.ProductsCart
-  })
- 
+
+
   const { user } = props
   return (
     <>
@@ -41,7 +38,7 @@ const Navbar = (props) => {
                   size: 'auto'
                 }}>
                   <span className="glyphicon glyphicon-shopping-cart">
-                  </span> <b> Cart {ProductInNav.length} </b>
+                  </span> <b> Cart  </b>
                   <b></b>
                 </Link>
               </li>
