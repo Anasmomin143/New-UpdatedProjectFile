@@ -38,36 +38,37 @@ const SignUp = () => {
     } else if (ValidationResultForPass.result === false) {
       setValidationMessage(ValidationResultForPass.message)
       return;
-    } 
+    }
     else if (ValidationResultForEmail.result === false) {
       setValidationMessage(ValidationResultForEmail.message)
       return;
     }
 
-    const id =new Date().getTime().toString();
-    const newrecords ={name,email,pass,conpass,id}
+    const id = new Date().getTime().toString();
+    const newrecords = { name, email, pass, conpass, id }
 
-    let userlist =await JSON.parse(localStorage.getItem("NewData"));
+    let userlist = await JSON.parse(localStorage.getItem("NewData"));
     userlist = userlist === null ? [] : userlist
 
-    if(newrecords.pass===newrecords.conpass){
-      await localStorage.setItem("NewData",JSON.stringify([...userlist , newrecords]));
+    if (newrecords.pass === newrecords.conpass) {
+      await localStorage.setItem("NewData", JSON.stringify([...userlist, newrecords]));
       NavigateToLoginPage("/Login")
     }
-  
-  
+
+
   }
 
 
 
   return (
     <>
-    
+
       <div className='mt-4'>
         <h1 style={{ textAlign: "center" }} > SignUp </h1>
-        <p>{ValidationMessage}</p>
+        
         <form onSubmit={handelsubmit}>
           <div className='container col-4 justify-content-around'>
+          <p>{ValidationMessage}</p>
             <div className="mb-3">
               <label htmlFor="UserName" className="form-label">Name</label>
               <input type="text" name='UserName' className="form-control" id="UserName" value={name} onChange={nameChange} />

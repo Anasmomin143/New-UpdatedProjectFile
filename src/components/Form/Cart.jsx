@@ -1,30 +1,35 @@
 import React from 'react'
 import '../css/Profile.css'
-import { useSelector } from 'react-redux/es/exports'
+import { useDispatch, useSelector } from 'react-redux/es/exports'
 import { useState } from 'react'
 import { useEffect } from 'react'
-
 const Cart = () => {
-    const { ProductsCart, ProductsinStore } = useSelector((State) => {
+    const [cartProducts, setCartProducts] = useState([]);
+    const [totalprice, setTotalprice] = useState(0)
+    const [totalItem, setTotalItem] = useState()
+    const dispatch = useDispatch()
+    const { cart } = useSelector((State) => {
         return {
-            ProductsCart: State.ProductsCart,
-            ProductsinStore: State.ProductsinStore
+            cart: State.cart
         }
     })
-    console.log("in cart",ProductsCart)
-    const [updateQty, setUpdateQty] = useState([]);
 
     useEffect(() => {
-        const Filteredproducts=ProductsinStore.filter((product)=>{
-                if(ProductsCart[product.id]){
-                    return true
-                }
-                return false
-        })
-        setUpdateQty(Filteredproducts)
-    }, [ProductsCart])
+        setCartProducts(cart)
+    }, [cart])
 
+    useEffect(() => {
+        let price = 0
+        let item = 0
+        cart.forEach(element => {
+            price += element.price * element.quantity
+            item += element.quantity
+        });
+        setTotalItem(item)
+        setTotalprice(price)
+    }, [totalprice, cart, totalItem])
     return (
+
         <div>
             <section className="h-100" >
                 <div className="container h-100 py-5">
@@ -38,10 +43,10 @@ const Cart = () => {
                                         className="fas fa-angle-down mt-1"></i></a></p>
                                 </div>
                             </div>
-                            {updateQty.length === 0 ? <div>No items in cart</div> :
-                                updateQty.map((item_in_cart) => {
-                                    const { id, image, price, title, rating } = item_in_cart
-                                    const { rate } = rating
+
+                            {cartProducts.length === 0 ? <div>No items in cart</div> :
+                                cartProducts.map((item_in_cart) => {
+                                    const { id, image, price, title, quantity } = item_in_cart
                                     return (<>
                                         <div className="card rounded-3 mb-4" key={id}>
                                             <div className="card-body p-4">
@@ -54,43 +59,47 @@ const Cart = () => {
                                                     </div>
                                                     <div className="col-md-3 col-lg-3 col-xl-3">
                                                         <p className="lead fw-normal mb-2">{title}</p>
-                                                        <p><span className="text-muted">Rating :- {rate} </span> <span className="text-muted"></span></p>
+                                                        <p><span className="text-muted"> </span> <span className="text-muted"></span></p>
                                                     </div>
                                                     <div className="col-md-3 col-lg-3 col-xl-2 d-flex">
                                                         <button className="btn btn-secondary" onClick={(event) => {
                                                             event.preventDefault();
-                                                            const updateArr = updateQty.map((item) => {
-                                                                if (item.title === item_in_cart.title) {
-                                                                    item.id -= 1
+                                                            const newCart = JSON.parse(JSON.stringify(cartProducts))
+                                                            const updateCartQuantitty = newCart.map((product) => {
+                                                                if (product.id === item_in_cart.id) {
+                                                                    product.quantity = product.quantity - 1
+                                                                    if (product.quantity === 0) product.quantity = 1
                                                                 }
-                                                                return item
+                                                                return product
                                                             })
-                                                            setUpdateQty(updateArr);
-                                                        }}>-</button>
-                                                        <input id="form1" min="0" name="quantity" value={id} type="text" onChange={(event) => {
-                                                            event.preventDefault()
-                                                            const changeQty = event.target.value
-                                                        }}
+                                                            dispatch({
+                                                                type: 'updatequantity',
+                                                                payload: { updateCartQuantitty }
+                                                            })
 
+                                                        }}>-</button>
+                                                        <input id="form1" min="0" name="quantity" value={quantity} type="text"
+                                                            readOnly
                                                             className="form-control form-control-sm" />
                                                         <button className="btn btn-secondary"
                                                             onClick={(event) => {
                                                                 event.preventDefault();
-                                                                const updateArr = updateQty.map((item) => {
-                                                                    if (item.title === item_in_cart.title) {
-                                                                        item.id += 1
+                                                                const newCart = JSON.parse(JSON.stringify(cartProducts))
+                                                                const updateCartQuantitty = newCart.map((product) => {
+                                                                    if (product.id === item_in_cart.id) {
+                                                                        product.quantity = product.quantity + 1
                                                                     }
-                                                                    return item
+                                                                    return product
                                                                 })
-                                                                setUpdateQty(updateArr);
+                                                                dispatch({
+                                                                    type: 'updatequantity',
+                                                                    payload: { updateCartQuantitty }
+                                                                })
                                                             }}
-
                                                         >+</button>
-
-
                                                     </div>
                                                     <div className="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                                        <h5 className="mb-0">Price: {price}</h5>
+                                                        <h5 className="mb-0">Price: {price * quantity}</h5>
                                                     </div>
                                                     <div className="col-md-1 col-lg-1 col-xl-1 text-end">
                                                         <button className="btn btn btn-danger">Remove</button>
@@ -103,13 +112,18 @@ const Cart = () => {
                                 })
                             }
                             {
-                                ProductsCart.length === 0 ? <div></div> :
+                                cartProducts.length === 0 ? <div></div> :
+                                    <center>
+                                        <div className="card">
+                                            <div className="totalprice"><h1>Total Price : {totalprice}</h1></div>
+                                            <div className="totalitem"><h1>Total item : {totalItem}</h1></div>
+                                            <div className="card-body">
 
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <button type="button" className="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+                                                <button type="button" className="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </center>
+
                             }
 
                         </div>

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 const INITIAL_STATE = {
     ProductsinStore: [],
-    ProductsCart: {}
+    cart: []
 }
 
 const Store = configureStore({
@@ -9,20 +9,22 @@ const Store = configureStore({
         const { type, payload } = action
         switch (type) {
             case "FetchedData":
-                // console.log("payload meka Prod", payload.productsFromApi)
                 return {
                     ...State,
                     ProductsinStore: payload.productsFromApi
                 }
             case 'AddToCart':
-                // console.log("add to card is clicked", payload.ProductItem)
-                console.log("Cart Data in Store", State.ProductsCart)
-                const { ProductId } = payload
-                console.log("Productid In Store", ProductId)
+                const { newProduuctItem } = payload
                 return {
                     ...State,
-                    ProductsCart: {...State.ProductsCart, [ProductId]: 1}
+                    cart: [...State.cart, newProduuctItem]
                 }
+            case'updatequantity':
+            return{
+                ...State,
+                cart:payload.updateCartQuantitty
+            }
+
         }
 
         return INITIAL_STATE;

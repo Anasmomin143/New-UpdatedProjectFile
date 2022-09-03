@@ -23,13 +23,12 @@ const Products = () => {
     }, [Price, ProductsinStore])
 
     const ADDTO_CART = (ProductItem) => {
-        console.log("Products in add to cart function", ProductItem.id)
-
+        const newProduuctItem = JSON.parse(JSON.stringify(ProductItem))
+        newProduuctItem.quantity=1
+        // console.log("to see", newProduuctItem)
         dispatch({
             type: 'AddToCart',
-            payload: {
-                ProductId: ProductItem.id
-            }
+            payload: { newProduuctItem }
         })
     }
 
